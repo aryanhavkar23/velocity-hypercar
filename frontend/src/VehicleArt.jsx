@@ -1,7 +1,6 @@
 import React from 'react';
 import {Wheel} from './Wheel.jsx';
-// Model-specific vector art (side view, nose to the left, 800x300). Used when no usable photo exists.
-// Each model has its own body, glasshouse, stance and wheel positions - they are NOT recolours of one another.
+
 const Defs=()=><defs>
 <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff" stopOpacity=".5"/><stop offset=".35" stopColor="#fff" stopOpacity=".05"/><stop offset=".7" stopColor="#000" stopOpacity=".15"/><stop offset="1" stopColor="#000" stopOpacity=".5"/></linearGradient>
 <linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#2c3a48"/><stop offset=".5" stopColor="#0a0e13"/><stop offset="1" stopColor="#151c24"/></linearGradient>
@@ -9,7 +8,6 @@ const Defs=()=><defs>
 const Shadow=({w=350})=><ellipse cx="400" cy="268" rx={w} ry="12" fill="#000" opacity=".45" filter="url(#bl)"/>;
 const Arch=({cx,r=57})=><circle cx={cx} cy="218" r={r} fill="#050506"/>;
 
-// Mercedes-Benz GLC 300e: tall compact SUV - upright roofline, roof rails, long glasshouse, black cladding, hatchback tail
 const GLC="M104 226 L102 198 C102 186 110 178 128 173 L232 150 C262 144 282 128 304 98 C320 76 342 62 372 60 L560 60 C590 60 606 68 622 86 L688 160 C706 166 716 178 716 198 L716 226Z";
 export function GlcArt({look,wheels}){const{body,cal,light,parts,wheelType}=look;
 return <svg viewBox="0 0 800 300" role="img" aria-label="Mercedes-Benz GLC 300e"><Defs/><clipPath id="glcb"><path d={GLC}/></clipPath><Shadow w={310}/>
@@ -30,7 +28,6 @@ return <svg viewBox="0 0 800 300" role="img" aria-label="Mercedes-Benz GLC 300e"
 {parts.includes('splitter')&&<path d="M96 222 L196 220 L200 230 L100 232Z" fill="#0b0b0c" stroke={body}/>}
 <Wheel cx={215} type={wheelType} cal={cal}/><Wheel cx={590} type={wheelType} cal={cal}/></svg>}
 
-// Porsche 911 GT3 RS: low rear-engined coupe - raked windscreen, fastback roof, wide rear haunch, swan-neck wing
 const P911="M54 222 L52 202 C54 190 70 184 96 180 C140 172 188 160 236 146 C262 138 282 126 298 112 C320 90 348 74 394 70 C442 66 500 74 556 96 C606 116 660 124 716 132 C742 136 758 150 760 174 L760 222Z";
 export function Gt3Art({look}){const{body,cal,light,parts,wheelType}=look;const big=parts.includes('wing');
 return <svg viewBox="0 0 800 300" role="img" aria-label="Porsche 911 GT3 RS"><Defs/><clipPath id="g3b"><path d={P911}/></clipPath><Shadow/>

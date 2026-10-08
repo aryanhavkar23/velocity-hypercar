@@ -6,13 +6,12 @@ import {resolveVehicleVisual} from './vehicleVisuals.js';
 import {ART,NamedPlaceholder} from './VehicleArt.jsx';
 export {Wheel};
 
-// Fallback for the SAME car when its 3D model is not installed: backend image -> model-specific art -> labelled placeholder.
 function Still({car,look,sources,Art,onImageError,index}){const src=sources[index];
  if(src)return <div className="pw"><div className="pi plain"><div className="pglow" style={{'--p':look.body}}/><img className="photo" src={src} alt={`${car.name} configured vehicle`} draggable={false} onError={onImageError}/>
   {look.paintName&&<span className="pchip"><i style={{background:look.body}}/>{look.paintName}</span>}</div></div>;
  return Art?<Art look={look}/>:<NamedPlaceholder name={car.name}/>}
 
-// One-time render of the real 3D car, used for thumbnails (no live WebGL context per card).
+
 function Thumb({vehicle,look,car,onUnavailable}){const [url,setUrl]=useState(null);
  useEffect(()=>{let live=true;snapshot(vehicle,look).then(u=>{if(!live)return;u?setUrl(u):onUnavailable()});return()=>{live=false}},[vehicle,look.body,look.wheelType,look.cal,look.interior,(look.parts||[]).join()]);
  return url?<img className="photo snap" src={url} alt={`${car.name} configured vehicle`} draggable={false}/>:<span className="loading3d" role="status">…</span>}
@@ -34,5 +33,4 @@ function Inner({car,look,compact}){
  return <div className="stage" data-model={v.key}><div className="ground"/><div className="car">{still}</div>
   <span className="credit warn">3D model for {car.name} is not installed — showing its image</span></div>}
 
-// keyed by car id so view state never leaks from one model to the next
 export default function CarVisual(props){return <Inner key={props.car?.id??'none'} {...props}/>}

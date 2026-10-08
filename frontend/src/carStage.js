@@ -1,5 +1,3 @@
-// Everything three.js: one reusable "showroom stage" (renderer, lighting, floor shadow, shared materials),
-// a GLB cache, and the one-time preparation that makes ANY car model fit the same scene.
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -8,10 +6,9 @@ import {classify} from './modelAdapters.js';
 
 const BASE=import.meta.env.BASE_URL;
 const RIMS={aero:['#4b4e53',1,.35],carbon:['#16171a',.6,.45],forged:['#cfd3d8',1,.12],performance:['#a07a45',1,.28]};
-const LENGTH=4.5;                                // every car is scaled to this length (scene units)
+const LENGTH=4.5;                               
 const VIEW_DIR=new THREE.Vector3(4.25,1.3,-4.6).normalize();
 
-// ---- GLB cache: each file is fetched and parsed once; paint/wheel/caliper changes never reload it ----
 const CACHE=new Map(),ACTIVE=new Set(),MAX_CACHED=3;let loader;
 const getLoader=()=>loader||(loader=new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath(BASE+'draco/')));
 function freeEntry(e){e.gl&&e.gl.scene.traverse(o=>{if(o.geometry)o.geometry.dispose();

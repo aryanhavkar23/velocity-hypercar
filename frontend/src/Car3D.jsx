@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {createStage,loadModel} from './carStage.js';
 
-// Interactive 3D view of ONE backend car. `vehicle` = {key,name,models:[{url,cfg}]} from vehicleVisuals.js.
-// Switching `vehicle` swaps the model; a version token makes a late response for a previously selected car harmless.
+
 export default function Car3D({vehicle,look,view,onFail,onLoad,onBusy}){
  const host=useRef(),S=useRef({token:0});S.current.look=look;
  useEffect(()=>{const el=host.current;let raf;
