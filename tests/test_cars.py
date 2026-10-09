@@ -1,10 +1,6 @@
 EXPECTED_CARS = [
-    "GLC 300e",
     "Porsche 911 GT3 RS",
-    "Lamborghini Huracán Tecnica",
-    "EQS 580",
-    "Ferrari 296 GTB",
-    "Mazda 3",
+    "Suzuki Swift",
 ]
 
 
@@ -13,21 +9,21 @@ def test_list_cars(client):
     assert r.status_code == 200
     names = [c["name"] for c in r.json()]
     assert names == EXPECTED_CARS
-    assert len(names) == 6
+    assert len(names) == 2
 
 
 def test_get_car(client):
     car = client.get("/api/cars/1").json()
-    assert car["name"] == "GLC 300e"
-    assert car["base_price"] == 8_700_000
-    assert car["horsepower"] == 313 and car["top_speed"] == 218
-    assert car["acceleration"] == 6.7
-    assert car["handling"] == 70 and car["braking"] == 75
+    assert car["name"] == "Porsche 911 GT3 RS"
+    assert car["base_price"] == 35_000_000
+    assert car["horsepower"] == 525 and car["top_speed"] == 296
+    assert car["acceleration"] == 3.2
+    assert car["handling"] == 98 and car["braking"] == 97
 
 
-def test_all_six_cars_retrieval_and_specs(client):
+def test_all_cars_retrieval_and_specs(client):
     cars = client.get("/api/cars").json()
-    assert len(cars) == 6
+    assert len(cars) == 2
     for c in cars:
         assert c["name"] in EXPECTED_CARS
         assert c["base_price"] > 0
@@ -58,12 +54,12 @@ def test_invalid_car_returns_404(client):
 def test_inactive_car_hidden(client, session_factory):
     from app.models import Car
     with session_factory() as db:
-        db.get(Car, 2).is_active = False
+        db.get(Car, 1).is_active = False
         db.commit()
     active_names = [c["name"] for c in client.get("/api/cars").json()]
     assert "Porsche 911 GT3 RS" not in active_names
-    assert len(active_names) == 5
-    assert client.get("/api/cars/2").status_code == 404
+    assert len(active_names) == 1
+    assert client.get("/api/cars/1").status_code == 404
 
 
 def test_options_load(client):
@@ -71,16 +67,15 @@ def test_options_load(client):
     counts = {k: len(v) for k, v in body.items()}
     assert counts == {
         "paints": 5, "wheels": 4, "calipers": 4, "interior_materials": 3, "interior_colors": 4,
-        "seat_types": 3, "engines": 12, "performance_packages": 12, "aero_packages": 12,
+        "seat_types": 3, "engines": 4, "performance_packages": 4, "aero_packages": 4,
     }
 
 
 def test_car_filtered_options(client, ids):
-    eqs_id = ids["cars"]["EQS 580"]
-    eqs_opts = client.get(f"/api/options?car_id={eqs_id}").json()
-    engine_names = [e["name"] for e in eqs_opts["engines"]]
-    assert "Dual Permanently Synchronous Electric Motors" in engine_names
-    assert "5.2L Naturally Aspirated V10" not in engine_names
+    swift_id = ids["cars"]["Suzuki Swift"]
+    swift_opts = client.get(f"/api/options?car_id={swift_id}").json()
+    engine_names = [e["name"] for e in swift_opts["engines"]]
+    assert "1.2L Z-Series Three-Cylinder" in engine_names
     assert "4.0L Naturally Aspirated Flat-Six" not in engine_names
 
 
@@ -97,8 +92,8 @@ def test_inactive_options_excluded(client, session_factory):
 
 def test_individual_option_endpoints(client):
     for path, n in [("paints", 5), ("wheels", 4), ("calipers", 4), ("interior-materials", 3),
-                    ("interior-colors", 4), ("seat-types", 3), ("engines", 12),
-                    ("performance-packages", 12), ("aero-packages", 12)]:
+                    ("interior-colors", 4), ("seat-types", 3), ("engines", 4),
+                    ("performance-packages", 4), ("aero-packages", 4)]:
         r = client.get(f"/api/options/{path}")
         assert r.status_code == 200 and len(r.json()) == n, path
 
@@ -109,7 +104,7 @@ def test_seed_is_idempotent(client, session_factory):
     with session_factory() as db:
         assert seed_database(db) == 0
         assert seed_database(db) == 0
-        assert db.query(Car).count() == 6 and db.query(Engine).count() == 12
+        assert db.query(Car).count() == 2 and db.query(Engine).count() == 4
 
 
 def test_system_endpoints(client):

@@ -1,9 +1,11 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 import app.models  # noqa: F401  (registers tables on Base.metadata)
 from app.core.config import settings
@@ -52,6 +54,11 @@ app.include_router(cars.router)
 app.include_router(options.router)
 app.include_router(configurations.router)
 app.include_router(configurations.garage_router)
+
+# Car images referenced by cars.image_url (e.g. /assets/porsche-911-gt3-rs.png) live in <project>/assets/
+ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+ASSETS_DIR.mkdir(exist_ok=True)
+app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
 
 @app.exception_handler(Exception)

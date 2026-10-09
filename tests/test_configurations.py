@@ -132,16 +132,16 @@ def test_update_can_change_car(client, auth_headers, payload, ids):
     r = client.put(
         f"/api/configurations/{created['id']}",
         json={
-            "car_id": ids["cars"]["Ferrari 296 GTB"],
-            "engine_id": ids["engines"]["3.0L Twin-Turbo V6 Plug-in Hybrid"],
-            "performance_package_id": ids["performance_packages"]["Standard GT Calibration"],
-            "aero_package_id": ids["aero_packages"]["Active Rear Spoiler"],
+            "car_id": ids["cars"]["Suzuki Swift"],
+            "engine_id": ids["engines"]["1.2L Z-Series Three-Cylinder"],
+            "performance_package_id": ids["performance_packages"]["Standard City Setup"],
+            "aero_package_id": ids["aero_packages"]["Standard Bodywork"],
         },
         headers=auth_headers,
     )
     assert r.status_code == 200, r.text
-    assert r.json()["car"]["name"] == "Ferrari 296 GTB"
-    assert r.json()["pricing"]["base_price"] == 54_000_000
+    assert r.json()["car"]["name"] == "Suzuki Swift"
+    assert r.json()["pricing"]["base_price"] == 849_000
 
 
 def test_update_with_invalid_id_rejected_and_unchanged(client, auth_headers, payload):

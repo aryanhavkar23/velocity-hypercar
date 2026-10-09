@@ -122,3 +122,7 @@ POST /api/configurations      (Authorization: Bearer <token>)
  "aero_package_id": 4, "name": "Black Beast"}
 ```
 Expected result for that build (Porsche 911 GT3 RS with Weissach options): final price 42,275,000 INR; 595 hp, 302 km/h, 3.0 s, handling 100, braking 100.
+
+## 3D cars
+The backend decides which cars exist (`/api/cars`); the frontend renders each car's own GLB from `assets/models/<slug>.glb`.
+Only cars listed in `app/db/seed.py` are served. See `frontend/vehicle-assets.md` for how to add a model or car, and `assets/models/README.md`.
