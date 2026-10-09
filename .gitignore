@@ -38,10 +38,10 @@ htmlcov/
 .tox/
 .nox/
 
-# Databases & Local SQLite
-*.db
-*.sqlite
-*.sqlite3
+# # Databases & Local SQLite
+# *.db
+# *.sqlite
+# *.sqlite3
 
 # IDE & OS
 .vscode/
